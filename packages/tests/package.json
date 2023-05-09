@@ -7,8 +7,8 @@
     "test": "tap"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Mohamed Belkheir <mohamedbel@protonmail.com>",
+  "license": "MIT",
   "dependencies": {
     "@dikur/hono": "workspace:*",
     "@dikur/http": "workspace:*",

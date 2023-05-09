@@ -1,6 +1,6 @@
 {
   "name": "@dikur/hono",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "",
   "main": "index.ts",
   "scripts": {
@@ -10,8 +10,8 @@
   "files": [
     "index.ts"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Mohamed Belkheir <mohamedbel@protonmail.com>",
+  "license": "MIT",
   "dependencies": {
     "reflect-metadata": "^0.1.13",
     "typescript": "^5.0.2"
