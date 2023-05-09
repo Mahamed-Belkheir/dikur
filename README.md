@@ -6,6 +6,21 @@ Similar to [routing-controllers](https://github.com/typestack/routing-controller
 
 Currently only a [Hono](https://hono.dev/) adapter exists, but adapters for express, fastify etc are to follow, you are free to open a feature request or contribute your own adapters.
 
+### Installing with Hono
+
+Install the following dependencies
+
+```bash
+npm i @dikur/http @dikur/hono hono reflect-metadata
+```
+
+and in tsconfig enable:
+
+```json
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,   
+```
+
 ### Usage Example with Hono
 
 ```ts
