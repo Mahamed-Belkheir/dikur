@@ -1,15 +1,17 @@
 {
   "name": "@dikur/hono",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "keywords": [],
   "files": [
-    "index.ts"
+    "./dist"
   ],
+  "types": "./dist/index.d.ts",
   "author": "Mohamed Belkheir <mohamedbel@protonmail.com>",
   "license": "MIT",
   "dependencies": {
