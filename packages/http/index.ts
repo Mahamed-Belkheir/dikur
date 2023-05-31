@@ -1,8 +1,13 @@
 import "reflect-metadata";
 
+export type MiddlewareHandler = (Context: unknown) => Promise<void>
+
+
+
 export type RouterNode = {
     basePath: string,
     class: any
+    middleware: MiddlewareHandler[],
     children: {
         [key: string]: RouteHandlerNode | RouterNode
     }
@@ -10,7 +15,8 @@ export type RouterNode = {
 
 export type RouteHandlerNode = {
     path: string,
-    method: string
+    method: string,
+    middleware: MiddlewareHandler[],
     params: ParameterInformation[]
 }
 
@@ -29,7 +35,6 @@ export type ParameterInformation = {
 }
 
 export type RouteHandler = (...args: any[]) => Promise<any>
-
 
 export const routerMdKey = "Dikur:router"
 
@@ -114,5 +119,21 @@ function parameterDecorator(type: ParameterTypes, validator?: (data: any) => any
         })
         routerNode.children[key] = routeNode as RouteHandlerNode;
         Reflect.defineMetadata(routerMdKey, routerNode, target.constructor)
+    }
+}
+
+export function Middleware(handler: MiddlewareHandler) {
+    return function(target: object, key?: string) {
+        let routerNode: RouterNode = Reflect.getOwnMetadata(routerMdKey, target.constructor) || { basePath: "/", children: {} };
+        if (!key) {
+            routerNode.middleware ??= [];
+            routerNode.middleware.push(handler);
+        } else {
+            let routeNode: Partial<RouteHandlerNode> = (routerNode.children[key] as RouteHandlerNode) || {params: []};
+            routeNode.middleware ??= [];
+            routeNode.middleware.push(handler);
+            routerNode.children[key] = routeNode as RouteHandlerNode;
+        }
+        Reflect.defineMetadata(routerMdKey, routerNode, target.constructor);
     }
 }

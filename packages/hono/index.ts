@@ -1,5 +1,5 @@
 import { routerMdKey, ParameterInformation, ParameterTypes, RouterNode } from "@dikur/http";
-import { Context, Hono } from "hono";
+import { Context, Hono, Next } from "hono";
 
 type Cls = new () => any;
 
@@ -16,6 +16,10 @@ export function HonoAdapator(target: new() => any, baseRouter: Hono, container: 
 function routerMapper(node: RouterNode, baseRouter = new Hono(), container: Container) {
     let r = new Hono()
 
+    r.use("/*", ...node.middleware.map(m => async (context: Context, next: Next) => {
+            await m(context);
+            await next();
+    }))
     Object.keys(node.children).forEach(methodName => {
         let details = node.children[methodName];
 
