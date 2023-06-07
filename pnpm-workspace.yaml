@@ -2,3 +2,4 @@ packages:
  - './packages/http'
  - './packages/tests'
  - './packages/hono'
+ - './packages/openapi'

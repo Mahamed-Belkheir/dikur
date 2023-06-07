@@ -7,7 +7,7 @@ importers:
   packages/hono:
     dependencies:
       '@dikur/http':
-        specifier: workspace:^
+        specifier: ^0.1.2
         version: link:../http
       hono:
         specifier: ^3.1.8
@@ -36,30 +36,21 @@ importers:
         specifier: ^18.15.5
         version: 18.15.5
 
-  packages/testing:
+  packages/openapi:
     dependencies:
       '@dikur/http':
-        specifier: workspace:*
+        specifier: ^0.1.2
         version: link:../http
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
-      tap:
-        specifier: ^16.3.4
-        version: 16.3.4_typescript/5.0.2
       typescript:
         specifier: ^5.0.2
         version: 5.0.2
-      zod:
-        specifier: ^3.21.4
-        version: 3.21.4
     devDependencies:
       '@types/node':
         specifier: ^18.15.5
         version: 18.15.5
-      '@types/tap':
-        specifier: ^15.0.8
-        version: 15.0.8
 
   packages/tests:
     dependencies:

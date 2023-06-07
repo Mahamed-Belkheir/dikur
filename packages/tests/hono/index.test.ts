@@ -1,6 +1,6 @@
 import { HonoAdapator } from "@dikur/hono";
-import { Hono, Context as HonoContext } from "hono";
-import { Body, Context, Delete, Get, Http, Param, Patch, Post, Put, Query } from "@dikur/http";
+import { Hono, Context as HonoContext, Next } from "hono";
+import { Body, Context, Delete, Get, Http, Middleware, Param, Patch, Post, Put, Query } from "@dikur/http";
 import tap from "tap";
 
 
@@ -112,6 +112,19 @@ tap.test('parameter testing', async t => {
                 query, body, param, env: ctx.env
             })
         }
+
+        @Get('/pass')
+        @Middleware(async (ctx: HonoContext, next: Next) => {
+            ctx.header('middleware', 'added');
+            await next()
+        })
+        async middlewarePassthrough(
+            @Context() ctx: HonoContext
+        ) {
+            return ctx.json({
+                status: 'ok'
+            })
+        }
     }
 
     let app = new Hono();
@@ -183,5 +196,17 @@ tap.test('parameter testing', async t => {
             env: { contextValue: "value" },
             body: { jsonValue: "value" }
          });
+    })
+
+    await t.test('runs middleware and passes to handler', async t => {
+        let res = await app.request("http://localhost/resource/pass", {
+            method: "GET",
+        });
+        
+        t.match(await res.json(), { 
+            status: 'ok'
+        });
+
+        // t.match(res.header('middleware'), 'pass')
     })
 })

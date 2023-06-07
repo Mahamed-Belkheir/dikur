@@ -1,13 +1,11 @@
 import "reflect-metadata";
 
-export type MiddlewareHandler = (Context: unknown) => Promise<void>
-
-
+export type MiddlewareHandler = (...args: any[]) => Promise<any>
 
 export type RouterNode = {
     basePath: string,
     class: any
-    middleware: MiddlewareHandler[],
+    middleware?: MiddlewareHandler[],
     children: {
         [key: string]: RouteHandlerNode | RouterNode
     }
@@ -16,7 +14,7 @@ export type RouterNode = {
 export type RouteHandlerNode = {
     path: string,
     method: string,
-    middleware: MiddlewareHandler[],
+    middleware?: MiddlewareHandler[],
     params: ParameterInformation[]
 }
 

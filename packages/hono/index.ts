@@ -16,10 +16,9 @@ export function HonoAdapator(target: new() => any, baseRouter: Hono, container: 
 function routerMapper(node: RouterNode, baseRouter = new Hono(), container: Container) {
     let r = new Hono()
 
-    r.use("/*", ...node.middleware.map(m => async (context: Context, next: Next) => {
-            await m(context);
-            await next();
-    }))
+    if (node.middleware) {
+        r.use("/*", ...node.middleware)
+    }
     Object.keys(node.children).forEach(methodName => {
         let details = node.children[methodName];
 
@@ -27,7 +26,8 @@ function routerMapper(node: RouterNode, baseRouter = new Hono(), container: Cont
             routerMapper(details, r, container);
         } else {
             let routeDetails = details;
-            r.on(routeDetails.method, routeDetails.path, async (ctx) => {
+            let middleware = routeDetails.middleware || [];
+            r.on(routeDetails.method, routeDetails.path, ...middleware, async (ctx) => {
                 let handler = container(node.class);
                 let parameters = await Promise.all(routeDetails.params.sort((a,b) => a.index - b.index).map(p => honoParamMapper(p, ctx)));
                 let result = await handler[methodName](...parameters);
