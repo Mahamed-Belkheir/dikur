@@ -1,6 +1,6 @@
 {
     "name": "@dikur/openapi",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -21,7 +21,7 @@
       "@types/node": "^18.15.5"
     },
     "peerDependencies": {
-        "@dikur/http": "^0.1.2"
+        "@dikur/http": "^0.2.1"
     }
   }
   

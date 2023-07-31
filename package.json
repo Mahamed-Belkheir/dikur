@@ -8,6 +8,10 @@
     "build:hono": "pnpm --filter=hono build",
     "build:openapi": "pnpm --filter=openapi build",
     "build:all": "pnpm build:http && pnpm build:hono && pnpm build:openapi",
+    "publish:http": "pnpm --filter=http publish",
+    "publish:hono": "pnpm --filter=hono publish",
+    "publish:openapi": "pnpm --filter=openapi publish",
+    "publish:all": "pnpm publish:http && pnpm publish:hono && pnpm publish:openapi",
     "test": "pnpm --filter=tests test"
   },
   "keywords": [],
