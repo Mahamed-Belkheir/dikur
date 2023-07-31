@@ -1,6 +1,8 @@
+import { JSONSchemaType } from "ajv";
 import "reflect-metadata";
-
 export type MiddlewareHandler = (...args: any[]) => Promise<any>
+
+export type Schema = Partial<JSONSchemaType<Object>>
 
 export type RouterNode = {
     basePath: string,
@@ -15,7 +17,7 @@ export type RouteHandlerNode = {
     path: string,
     method: string,
     middleware?: MiddlewareHandler[],
-    params: ParameterInformation[]
+    params: ParameterInformation[],
 }
 
 export enum ParameterTypes {
@@ -28,8 +30,8 @@ export enum ParameterTypes {
 export type ParameterInformation = {
     type: ParameterTypes,
     index: number,
-    validator?: (data: any) => any,
-    reflectedType?: any
+    schema?: Schema,
+    mediatype?: "json" | "form",
 }
 
 export type RouteHandler = (...args: any[]) => Promise<any>
@@ -87,33 +89,29 @@ export function Delete(path?: string) {
     return Method("DELETE", path);
 }
 
-export function Body(validator?: (data: any) => any) {
-    return parameterDecorator(ParameterTypes.Body, validator)
+export function Body(schema?: Schema, mediatype?: "json" | "form") {
+    return parameterDecorator(ParameterTypes.Body, schema, mediatype)
 }
-export function Query(validator?: (data: any) => any) {
-    return parameterDecorator(ParameterTypes.Query, validator)
+export function Query(schema?: Schema) {
+    return parameterDecorator(ParameterTypes.Query, schema)
 }
-export function Param(validator?: (data: any) => any) {
-    return parameterDecorator(ParameterTypes.Param, validator)
+export function Param(schema?: Schema) {
+    return parameterDecorator(ParameterTypes.Param, schema)
 }
 export function Context() {
     return parameterDecorator(ParameterTypes.Context)
 }
 
 
-function parameterDecorator(type: ParameterTypes, validator?: (data: any) => any) {
+function parameterDecorator(type: ParameterTypes, schema?: Schema, mediatype?: "json" | "form") {
     return function(target: Object, key: string, index: number) {
-        let reflectedType = Reflect.getMetadata('design:paramtypes', target, key)?.[index];
-        if (!validator && reflectedType && "validate" in reflectedType) {
-            validator = reflectedType.validate
-        }
         let routerNode: RouterNode = Reflect.getOwnMetadata(routerMdKey, target.constructor) || { basePath: "/", children: {} };
         let routeNode: Partial<RouteHandlerNode> = (routerNode.children[key] as RouteHandlerNode) || {params: []};
         routeNode.params?.unshift({
             index,
             type,
-            validator,
-            reflectedType
+            schema,
+            mediatype
         })
         routerNode.children[key] = routeNode as RouteHandlerNode;
         Reflect.defineMetadata(routerMdKey, routerNode, target.constructor)

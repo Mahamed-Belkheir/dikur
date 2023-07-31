@@ -1,15 +1,16 @@
 import { Body, Context, Http, Method, NestedRouter, Query, routerMdKey, ParameterTypes, RouterNode } from "@dikur/http";
+import { Static, Type } from "@sinclair/typebox";
 import tap from "tap";
 
-class User {
-    static validate() {
-        console.log("did the validation")
-    }
-}
+const User = Type.Object({
+    username: Type.String(),
+    password: Type.String(),
+})
+type User = Static<typeof User>;
 
-function validateQuery() {
-
-}
+const querySchema = Type.Object({
+    param: Type.String()
+})
 
 @Http("/special")
 class Special {
@@ -22,12 +23,12 @@ class Special {
 @Http("/resource")
 class Resource {
     @Method("GET")
-    async getAll(@Context() ctx: any, @Query(validateQuery) query: any) {
+    async getAll(@Context() ctx: any, @Query(querySchema) query: any) {
 
     }
 
     @Method("POST")
-    async addOne(@Context() ctx: any, @Body() data: User) {
+    async addOne(@Context() ctx: any, @Body(User) data: User) {
 
     }
 
@@ -45,7 +46,7 @@ tap.test("get router node with trees", async t => {
             "getAll": {
                 params: [
                     { index: 0, type: ParameterTypes.Context },
-                    { index: 1, type: ParameterTypes.Query, validator: validateQuery },
+                    { index: 1, type: ParameterTypes.Query, schema: querySchema },
                 ],
                 path: "/getAll",
                 method: "GET"
@@ -53,7 +54,7 @@ tap.test("get router node with trees", async t => {
             "addOne": {
                 params: [
                     { index: 0, type: ParameterTypes.Context },
-                    { index: 1, type: ParameterTypes.Body, validator: User.validate, reflectedType: User },
+                    { index: 1, type: ParameterTypes.Body, schema: User },
                 ],
                 path: "/addOne",
                 method: "POST"

@@ -1,6 +1,6 @@
 {
   "name": "@dikur/http",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
@@ -14,6 +14,7 @@
   "author": "Mohamed Belkheir <mohamedbel@protonmail.com>",
   "license": "MIT",
   "dependencies": {
+    "ajv": "^8.12.0",
     "reflect-metadata": "^0.1.13",
     "typescript": "^5.0.2"
   },

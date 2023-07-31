@@ -4,6 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build:http": "pnpm --filter=http build",
+    "build:hono": "pnpm --filter=hono build",
+    "build:openapi": "pnpm --filter=openapi build",
+    "build:all": "pnpm build:http && pnpm build:hono && pnpm build:openapi",
+    "test": "pnpm --filter=tests test"
   },
   "keywords": [],
   "author": "Mohamed Belkheir <mohamedbel@protonmail.com>",

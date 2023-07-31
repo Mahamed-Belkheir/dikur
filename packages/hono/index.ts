@@ -1,19 +1,27 @@
 import { routerMdKey, ParameterInformation, ParameterTypes, RouterNode } from "@dikur/http";
-import { Context, Hono, Next } from "hono";
+import Ajv, { ErrorObject } from "ajv";
+import { Context, Hono } from "hono";
 
 type Cls = new () => any;
 
 type Container = (cls: Cls) => InstanceType<Cls>
 
-export function HonoAdapator(target: new() => any, baseRouter: Hono, container: Container = cls => new cls() ) {
+export class DikurHonoValidationError extends Error {
+    message = "parameter validation failed"
+    constructor(public parametertype: string, public errors: ErrorObject[]) {
+        super();
+    }
+}
+
+export function HonoAdapator(target: new() => any, baseRouter: Hono, container: Container = cls => new cls(), ajv = new Ajv() ) {
     let node = Reflect.getOwnMetadata(routerMdKey, target);
     if (!node) {
         throw new Error(`No routing metadata found in ${target.name}`)
     }
-    return routerMapper(node, baseRouter, container);
+    return routerMapper(node, baseRouter, container, ajv);
 }
 
-function routerMapper(node: RouterNode, baseRouter = new Hono(), container: Container) {
+function routerMapper(node: RouterNode, baseRouter = new Hono(), container: Container, ajv: Ajv) {
     let r = new Hono()
 
     if (node.middleware) {
@@ -23,13 +31,13 @@ function routerMapper(node: RouterNode, baseRouter = new Hono(), container: Cont
         let details = node.children[methodName];
 
         if ("children" in details) {
-            routerMapper(details, r, container);
+            routerMapper(details, r, container, ajv);
         } else {
             let routeDetails = details;
             let middleware = routeDetails.middleware || [];
             r.on(routeDetails.method, routeDetails.path, ...middleware, async (ctx) => {
                 let handler = container(node.class);
-                let parameters = await Promise.all(routeDetails.params.sort((a,b) => a.index - b.index).map(p => honoParamMapper(p, ctx)));
+                let parameters = await Promise.all(routeDetails.params.sort((a,b) => a.index - b.index).map(p => honoParamMapper(p, ctx, ajv)));
                 let result = await handler[methodName](...parameters);
                 return result;
             })
@@ -39,13 +47,13 @@ function routerMapper(node: RouterNode, baseRouter = new Hono(), container: Cont
     return r;
 }
 
-async function honoParamMapper(param: ParameterInformation, ctx: Context) {
+async function honoParamMapper(param: ParameterInformation, ctx: Context, ajv: Ajv) {
     let data: any;
     switch (param.type) {
         case ParameterTypes.Context:
             return ctx;
         case ParameterTypes.Body:
-            let header = ctx.req.header('Content-Type'); 
+            let header = ctx.req.header('Content-Type');
             if (header?.includes('form')) {
                 data = await ctx.req.parseBody();
                 break;
@@ -62,10 +70,12 @@ async function honoParamMapper(param: ParameterInformation, ctx: Context) {
             data = ctx.req.query();
             break;
     }
-    if (param.validator) {
-        data = await param.validator(data);
-    } else if ("validate" in param.reflectedType) {
-        data = await param.reflectedType.validate(data);
+    if (param.schema) {
+        let v = ajv.compile(param.schema);
+        
+        if (!v(data)) {
+            return Promise.reject(new DikurHonoValidationError(param.type, v.errors!.slice(0)));
+        }
     }
     return data;
 }

@@ -1,0 +1,27 @@
+{
+    "name": "@dikur/openapi",
+    "version": "0.1.0",
+    "description": "",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+      "./dist"
+    ],
+    "scripts": {
+      "build": "tsc"
+    },
+    "keywords": [],
+    "author": "Mohamed Belkheir <mohamedbel@protonmail.com>",
+    "license": "MIT",
+    "dependencies": {
+      "reflect-metadata": "^0.1.13",
+      "typescript": "^5.0.2"
+    },
+    "devDependencies": {
+      "@types/node": "^18.15.5"
+    },
+    "peerDependencies": {
+        "@dikur/http": "^0.1.2"
+    }
+  }
+  

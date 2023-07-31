@@ -2,6 +2,7 @@ import { HonoAdapator } from "@dikur/hono";
 import { Hono, Context as HonoContext, Next } from "hono";
 import { Body, Context, Delete, Get, Http, Middleware, Param, Patch, Post, Put, Query } from "@dikur/http";
 import tap from "tap";
+import { Type } from "@sinclair/typebox";
 
 
 tap.test('basic route tests', async t => {
@@ -92,12 +93,9 @@ tap.test('parameter testing', async t => {
         }
 
         @Post("/item")
-        async postItem(@Context() ctx: HonoContext, @Body(data => {
-            if (data.error) {
-                throw new Error("validation failed");
-            }
-            return data;
-        }) body: Record<string, string>) {
+        async postItem(@Context() ctx: HonoContext, @Body(Type.Object({
+            jsonValue: Type.String()
+        })) body: Record<string, string>) {
             return ctx.json({body});
         }
 

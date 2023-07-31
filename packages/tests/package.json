@@ -1,5 +1,5 @@
 {
-  "name": "@dikur/testing",
+  "name": "@dikur/tests",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,6 +12,8 @@
   "dependencies": {
     "@dikur/hono": "workspace:*",
     "@dikur/http": "workspace:*",
+    "@dikur/openapi": "workspace:^",
+    "@sinclair/typebox": "^0.29.6",
     "hono": "^3.1.8",
     "reflect-metadata": "^0.1.13",
     "tap": "^16.3.4",
