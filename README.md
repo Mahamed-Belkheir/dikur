@@ -27,7 +27,7 @@ and in tsconfig enable:
 import { Http, Get, Put, Post, Context } from "@dikur/http";
 import { Hono, Context as HonoContext } from "hono";
 import { HonoAdapter } from "@dikur/hono";
-import { Apple, appleValidators } from "./apple";
+import { Apple, CreateAppleSchema, UpdateAppleSchema } from "./apple";
 import { db } from "./db";
 
 @Http("/apples")
@@ -46,7 +46,7 @@ class ApplesController {
     async update(
         @Context() ctx: HonoContext,
         @Param() { id }: Record<string,string>,
-        @Body(appleValidators.update) apple: Apple
+        @Body(UpdateAppleSchema) apple: UpdateAppleSchema
         ) {
             await db.apples.update(apple).where({id});
             return ctx.json({ status: 'success' }, 201);
@@ -55,7 +55,7 @@ class ApplesController {
     @Post("/")
     async create(
         @Context() ctx: HonoContext,
-        @Body(appleValidators.create) apple: Apple
+        @Body(CreateAppleSchema) apple: CreateAppleSchema
     ) {
         await db.apples.insert(apple);
         return ctx.json({ status: 'success' }, 201);
@@ -107,16 +107,13 @@ Parameter decorators lets adapters know what parameters to pass to your route ha
 
 - **@Context()**
     - This passes adapter specific context to your handler, in the case of Hono it will passes Hono's Context object as is. in other adapters (e.g. fastify/express) it might group up request and response objects into one object.
-- **@Body/Param/Query(validator?: (unknown) => T): T**
+- **@Body/Param/Query(schema?: JSONSchema, options?: { type: "json" | "form"}): T**
     - **Body**:
         - This passes either the formbody or json body from the request to the handler depending on content-type header
     - **Param**:
-        - This passes the whole parameter map/record object to the handler
+        - This passes the whole path parameter map/record object to the handler
     - **Query**:
         - This passes the whole request query map/record object to the handler
-    - In regards to validation: 
-        - accepts an optional validator function, which is ran with the found body object, and the return value is passed as the body parameter
-        - if no validator is passed, but the parameter is a class with a `validate` method available, that will be used instead
 
 None of these parameters are required, though the Context is often needed.
 
