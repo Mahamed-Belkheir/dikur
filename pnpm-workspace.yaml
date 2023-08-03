@@ -3,3 +3,4 @@ packages:
  - './packages/tests'
  - './packages/hono'
  - './packages/openapi'
+ - './packages/express'

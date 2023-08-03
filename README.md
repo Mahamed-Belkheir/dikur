@@ -134,3 +134,6 @@ It also takes an optional container parameter, a function that takes a class and
 HonoAdapter(ClassThatWasDecorated, Hono, (cls) => container.get(cls))
 
 ```
+
+
+### @dikur/openapi
