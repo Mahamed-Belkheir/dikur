@@ -1,4 +1,4 @@
-import { Body, Get, Http, Param, Post, Query } from "@dikur/http";
+import { Body, Get, Http, NestedRouter, Param, Post, Query } from "@dikur/http";
 import { Static, Type } from "@sinclair/typebox";
 import { OpenAPIAdapter, Response, Secured } from "../../openapi";
 import tap from "tap";
@@ -21,7 +21,14 @@ const Resource = Type.Object({
 })
 type Resource = Static<typeof Resource>;
 
+@Http('/nested')
+class NestedResource {
+    @Response("200", "application/json", "nested resource", Resource)
+    @Get("/special")
+    async specialRoute() {
 
+    }
+}
 @Http("/resource")
 export class ResourceController {
 
@@ -43,6 +50,9 @@ export class ResourceController {
     async create(@Body(Resource, "form") data: Resource) {
 
     }
+
+    @NestedRouter()
+    static nested = NestedResource;
 }
 
 
@@ -145,6 +155,22 @@ tap.test("generates valid OpenAPI schema", async t => {
                             }
                         }
                     }
+                }
+            },
+            "/resource/nested/special": {
+                get: {
+                    parameters: [],
+                    responses: {
+                        "200": {
+                            description: "nested resource",
+                            content: {
+                                "application/json": {
+                                    schema: Resource
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
         }

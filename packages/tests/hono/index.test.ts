@@ -83,7 +83,6 @@ tap.test('parameter testing', async t => {
 
         @Get("/item/query")
         async getQuery(@Context() ctx: HonoContext, @Query() query: Record<string, string>) {
-            console.log()
             return ctx.json({query});
         }
 

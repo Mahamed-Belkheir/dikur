@@ -51,7 +51,7 @@ function getPathValues(node: RouterNode, basePath = ""): PathsObject {
     for(let key in node.children) {
         let p = node.children[key];
         if ("children" in p) {
-            Object.assign(paths, getPathValues(p, basePath + p.basePath));
+            Object.assign(paths, getPathValues(p, basePath));
         } else {
             let {responses, securityScheme} = (p as ExtendedRouteHandlerNode);
             
