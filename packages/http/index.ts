@@ -120,11 +120,12 @@ function parameterDecorator(type: ParameterTypes, schema?: Schema, mediatype?: "
 
 export function Middleware(handler: MiddlewareHandler) {
     return function(target: object, key?: string) {
-        let routerNode: RouterNode = Reflect.getOwnMetadata(routerMdKey, target.constructor) || { basePath: "/", children: {} };
+        let routerNode: RouterNode = Reflect.getMetadata(routerMdKey, target) || { basePath: "/", children: {} };
         if (!key) {
             routerNode.middleware ??= [];
             routerNode.middleware.push(handler);
         } else {
+            routerNode = Reflect.getMetadata(routerMdKey, target.constructor) || { basePath: "/", children: {} };
             let routeNode: Partial<RouteHandlerNode> = (routerNode.children[key] as RouteHandlerNode) || {params: []};
             routeNode.middleware ??= [];
             routeNode.middleware.push(handler);
