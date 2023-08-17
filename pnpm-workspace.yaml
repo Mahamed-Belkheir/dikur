@@ -4,3 +4,4 @@ packages:
  - './packages/hono'
  - './packages/openapi'
  - './packages/express'
+ - './packages/docs'
