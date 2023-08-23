@@ -1,0 +1,45 @@
+- Landing Page
+    - tag line
+    - description
+    - 3 main things?
+        - abstraction, lightly coupled interface definition
+        - HTTP routing, supports multiple routers, serverless
+        - small code bundle, packages sub 100 LoC
+- Docs
+- Intro
+    - What is Dikur
+    - Why dikur
+    - Compared to alternatives
+- Http
+    - concepts
+    - Guides
+        - defining a router
+        - defining routes
+            - get
+            - post
+            - patch
+            - delete
+        - defining parameters
+        - nesting routers
+        - middleware
+        - adapters
+            - Hono
+                - Adapter
+                - Context
+                - Responses
+                - Middleware
+            - Express
+                - Adapter
+                - Context
+                - Responses
+                - Middleware
+            - OpenAPI
+                - Adapter
+                - Responses
+                - Secured
+    - Tutorials
+    - API Reference
+- CLI
+    - Todo
+- Message Queues
+    - Todo

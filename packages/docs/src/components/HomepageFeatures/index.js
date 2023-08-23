@@ -4,32 +4,36 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
+    title: 'Abstract',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Dikur abstracts your application's interface,
+        reducing the coupling between the implementation and
+        your interface's contracts
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Small code bundle',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Dikur implements the minimum abstraction,
+        and trades complete decoupling with minimal code,
+        We believe that code that is likely to completely changed
+        should not be abstracted anyway, and be left coupled.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Common base',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Tooling built for Dikur works across multiple implementation libraries
+        (e.g. OpenAPI generator works for APIs on express, Hono etc), helping 
+        reduce repeated workloads
       </>
     ),
   },

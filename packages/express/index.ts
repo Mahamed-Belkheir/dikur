@@ -42,9 +42,9 @@ export function routerMapper(node: RouterNode, router: Express.Router, container
             let routeDetails = details;
             let middleware = routeDetails.middleware || [];
             r[routeDetails.method.toLowerCase() as "get"](routeDetails.path, ...middleware, async (req, res, next) => {
-                let handler = container(node.class);
-                let parameters = await Promise.all(routeDetails.params.sort((a,b) => a.index - b.index).map(p => expressParamMapper(p, {req, res, next}, ajv)));
                 try {
+                    let handler = container(node.class);
+                    let parameters = await Promise.all(routeDetails.params.sort((a,b) => a.index - b.index).map(p => expressParamMapper(p, {req, res, next}, ajv)));
                     await handler[methodName](...parameters);
                 } catch (e) {
                     next(e);
