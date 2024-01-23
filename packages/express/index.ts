@@ -28,7 +28,7 @@ export function ExpressAdapator(target: new() => any, baseRouter: Express.Router
 }
 
 export function routerMapper(node: RouterNode, router: Express.Router, container: Container, ajv: Ajv): Express.Router {
-    let r = Router();
+    let r = Router({mergeParams: true});
 
     if (node.middleware) {
         r.use(...node.middleware);
